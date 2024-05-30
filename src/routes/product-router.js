@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { productMgr } from "../../productManager/product.manager.js";
 import { productValidator } from "../../middleware/productValidator.js";
+import { validarPut } from "../../middleware/productValidator.js";
 
 const router = Router();
 
@@ -34,20 +35,45 @@ router.get('/:pid', async (req, res) => {
 
 //AddProduct
 router.post('/', productValidator,async (req, res) => {
-    const newProduct = req.body
+    const {title, description, code, price, status, stock, category, thumbnails} = req.body;
+
+    let newProductValues = {}
+    if(title != undefined)         {newProductValues["title"]       = title}
+    if(description != undefined)   {newProductValues["description"] = description}
+    if(code != undefined)          {newProductValues["code"]        = code}
+    if(price != undefined)         {newProductValues["price"]       = price}
+    if(status != undefined)        {newProductValues["status"]      = status}
+    if(stock != undefined)         {newProductValues["stock"]       = stock}
+    if(category != undefined)      {newProductValues["category"]    = category}
+    if(thumbnails != undefined)      {newProductValues["thumbnails"]    = thumbnails}
 
     try{
-        res.status(200).json(await productMgr.addProduct(newProduct))
+        res.status(200).json(await productMgr.addProduct(newProductValues))
     }
     catch(error){
         res.status(404).json({msj:"Error en add product"})
     }
+
+    const socketProducts =  await productMgr.getProducts()
+    socketServer.emit('getProducts', socketProducts)
 })
 
 //UpdateProduct
-router.put('/:pid', async (req, res) => {
+router.put('/:pid', validarPut, async (req, res) => {
     const {pid} = req.params
-    const newProductValues = req.body
+    const {title, description, code, price, status, stock, category, thumbnails} = req.body;
+
+
+    let newProductValues = {}
+    if(title != undefined)         {newProductValues["title"]       = title}
+    if(description != undefined)   {newProductValues["description"] = description}
+    if(code != undefined)          {newProductValues["code"]        = code}
+    if(price != undefined)         {newProductValues["price"]       = price}
+    if(status != undefined)        {newProductValues["status"]      = status}
+    if(stock != undefined)         {newProductValues["stock"]       = stock}
+    if(category != undefined)      {newProductValues["category"]    = category}
+    if(thumbnails != undefined)      {newProductValues["thumbnails"]    = thumbnails}
+
     try{
         console.log("11");
         const productoActualizado = await productMgr.updateProduct(pid, newProductValues)
@@ -61,6 +87,9 @@ router.put('/:pid', async (req, res) => {
     catch(error){
         res.status(404).json({msj:"error"})
     }
+
+    const socketProducts =  await ProductMgr.getProducts()
+    socketServer.emit('getProducts', socketProducts)
 })
 
 //removeProduct
@@ -77,6 +106,8 @@ router.delete('/:pid', async (req, res) => {
     catch(error){
         res.status(404).json({msj:"error"})
     }
+    const socketProducts =  await ProductMgr.getProducts()
+    socketServer.emit('getProducts', socketProducts)
 })
 
 
