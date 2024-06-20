@@ -77,7 +77,7 @@ export const validarPut = (req, res, next)=>{
     
     
     if(!valida){
-        res.status(404).send("Los tipos no son correctos: title=[string], description=[string], code=[string], price=[number], status=[boolean], stock=[number], category=[string]")
+        res.status(404).send("Los tipos de los campos no son correctos: title=[string], description=[string], code=[string], price=[number], status=[boolean], stock=[number], category=[string]")
     }else{
         next();
     }

@@ -5,7 +5,10 @@ import handlebars from "express-handlebars"
 import { __dirname } from "./utils.js"
 import viewsRouter from "./src/routes/views-router.js"
 import { Server } from "socket.io"
-import { productMgr } from "./productManager/product.manager.js"
+import { productMgr } from "./src/daos/fs/product.manager.js"
+import { initMongoDB } from "./src/db/database.js"
+
+initMongoDB()
 
 const app = express()
 const PORT = 8080
@@ -43,7 +46,7 @@ socketServer.on("connection", async (socket) =>{
     })
 
     socket.on("deleteProduct", async (idToDelete)=>{
-        await productMgr.removeProduct(idToDelete)
+        await productMgr.deleteProduct(idToDelete)
         const products = await productMgr.getProducts()
         socket.emit("getProducts", products )
     })

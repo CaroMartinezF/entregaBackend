@@ -53,7 +53,7 @@ class ProductManager {
     }
 
     //BORRAR PRODUCTO
-    async removeProduct(id){
+    async deleteProduct(id){
         let products = await this.getProducts()
 
         if (products.some((prod)=> { return prod.id === id})) {
@@ -107,7 +107,7 @@ const prueba = async () => {
     //console.log(products)
     //await productMgr.getProductById(2) 
     // await productMgr.addProduct({name: "pollera"})
-    // await productMgr.removeProduct(5)
+    // await productMgr.deleteProduct(5)
     //await productMgr.updateProduct(3, {id: 5, name: "compu", color: "negra"})
 }
 //prueba()
